@@ -11,7 +11,7 @@ public class TwitterAPI {
 
     public TwitterAPI() {
         ConfigurationBuilder cb = new ConfigurationBuilder();
-        cb.setDebugEnabled(true)
+        cb.setDebugEnabled(false)
                 .setOAuthConsumerKey("-")
                 .setOAuthConsumerSecret("-")
                 .setOAuthAccessToken("-")
@@ -22,7 +22,7 @@ public class TwitterAPI {
     }
 
     public List<Status> getTweets(String keyword, int limit) {
-        List<Status> tweetss = new ArrayList<>();
+        List<Status> tweetList = new ArrayList<>();
 
         try {
             Query query = new Query();
@@ -36,7 +36,7 @@ public class TwitterAPI {
 
                 for(Status tweet : tweets) {
                     query.setMaxId(tweet.getId());
-                    tweetss.add(tweet);
+                    tweetList.add(tweet);
 
                     tweetCount++;
                 }
@@ -45,7 +45,7 @@ public class TwitterAPI {
             e.printStackTrace();
         }
 
-        return tweetss;
+        return tweetList;
     }
 
     public void setLanguage(String language) {
