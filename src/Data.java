@@ -5,40 +5,48 @@ import java.util.List;
 import java.util.Scanner;
 
 public class Data {
-    public List<List<Status>> setupTrainingData(List<Status> tweets) {
-        List<List<Status>> compositeTweets = new ArrayList<>();
-        List<Status> positiveTweets = new ArrayList<>();
-        List<Status> neutralTweets = new ArrayList<>();
-        List<Status> negativeTweets = new ArrayList<>();
+    public void setupTrainingData(List<Status> tweets) {
         Scanner scanner = new Scanner(System.in);
         int tweetCounter = 0;
 
+        System.out.println("\n Please classify the following tweets as 1:positive, 2:neutral, 3:negative, blank to " +
+                "discard tweet, \"test\" to test, or \"exit\" to stop en delete training set.");
 
-        System.out.println("\n Please classify the following tweets as 1:positive, 2:neutral, 3:negative or no input to discard tweet.");
         for(Status tweet: tweets) {
-            System.out.println(tweetCounter + "/" + tweets.size() + " - " + tweet.getText());
+            String tweetText = getText(tweet);
+            System.out.println(tweetCounter+1 + "/" + tweets.size() + " - " + tweetText);
 
-            int input = scanner.nextInt();
+            //tweetText = cleanTweet(tweetText);
+            //List<String> tokenizedTweetText = tokenizeTweet(tweetText);
+
+            String input = scanner.nextLine();
             switch(input) {
-                case 1:
-                    positiveTweets.add(tweet);
+                case "1":
                     break;
-                case 2:
-                    neutralTweets.add(tweet);
+                case "2":
                     break;
-                case 3:
-                    negativeTweets.add(tweet);
+                case "3":
+                    break;
+                case "test":
                     break;
                 default:
                     break;
             }
 
+            //increment total in mongo with one.
             tweetCounter++;
         }
+    }
 
-        compositeTweets.add(positiveTweets);
-        compositeTweets.add(neutralTweets);
-        compositeTweets.add(negativeTweets);
-        return compositeTweets;
+    public String getText(Status tweet) {
+        String tweetText;
+
+        if(tweet.isRetweet()){
+            tweetText = tweet.getRetweetedStatus().getText();
+        } else {
+            tweetText = tweet.getText();
+        }
+
+        return tweetText;
     }
 }
