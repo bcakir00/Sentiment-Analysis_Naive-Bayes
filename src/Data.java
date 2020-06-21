@@ -49,4 +49,9 @@ public class Data {
 
         return tweetText;
     }
+
+
+    public String cleanTweet(String tweetText) {
+        return null;
+    }
 }
