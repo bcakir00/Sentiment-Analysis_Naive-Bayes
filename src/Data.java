@@ -3,6 +3,7 @@ import twitter4j.Status;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
+import java.util.regex.Pattern;
 
 public class Data {
     public void setupTrainingData(List<Status> tweets) {
@@ -50,8 +51,20 @@ public class Data {
         return tweetText;
     }
 
-    public String cleanTweet(String tweetText) {
-        return null;
+    public List<String> cleanTweet(String[] splitTweetText) {
+        List<String> cleanedTokens = new ArrayList<>();
+
+        for(String word : splitTweetText) {
+            word = word.replaceAll("[.]", "");
+            word = word.replaceAll(",", "");
+            word = word.toLowerCase();
+
+            if(Pattern.matches("[a-z[A-Z]]*", word)) {
+                cleanedTokens.add(word);
+            }
+        }
+
+        return cleanedTokens;
     }
 
     public String[] tokenizeTweet(String tweetText) {
