@@ -54,7 +54,7 @@ public class Data {
         return null;
     }
 
-    public List<String> tokenizeTweet(String tweetText) {
-        return null;
+    public String[] tokenizeTweet(String tweetText) {
+        return tweetText.split("\\s+");
     }
 }
