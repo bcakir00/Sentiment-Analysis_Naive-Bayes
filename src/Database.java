@@ -26,9 +26,46 @@ public class Database {
         database = mongoClient.getDatabase(name);
     }
 
-    public void insertOneDocument(String collectionName, Document document) {
-        collection = database.getCollection(collectionName);
-        collection.insertOne(document);
+    public void insertTokens(String collectionName, String classifier, List<String> cleanTokenizedTweet) {
+        MongoCollection<Document> collection = database.getCollection(collectionName);
+
+        for(String token : cleanTokenizedTweet) {
+            if(collection.find(eq("_id", token)).first() == null) {
+                Document doc = new Document();
+
+                switch(classifier) {
+                    case "positive":
+                        doc = new Document("_id", token).append("positive" , 1);
+                        incrementClassCounter(collectionName, "positive");
+                        break;
+                    case "neutral":
+                        doc = new Document("_id", token).append("neutral" , 1);
+                        incrementClassCounter(collectionName, "neutral");
+                        break;
+                    case "negative":
+                        doc = new Document("_id", token).append("negative" , 1);
+                        incrementClassCounter(collectionName, "negative");
+                        break;
+                }
+
+                collection.insertOne(doc);
+            } else {
+                switch(classifier) {
+                    case "positive":
+                        collection.updateOne(eq("_id", token), inc("positive", 1));
+                        incrementClassCounter(collectionName, "positive");
+                        break;
+                    case "neutral":
+                        collection.updateOne(eq("_id", token), inc("neutral", 1));
+                        incrementClassCounter(collectionName, "neutral");
+                        break;
+                    case "negative":
+                        collection.updateOne(eq("_id", token), inc("negative", 1));
+                        incrementClassCounter(collectionName, "negative");
+                        break;
+                }
+            }
+        }
     }
 
     public void closeConnection() {
