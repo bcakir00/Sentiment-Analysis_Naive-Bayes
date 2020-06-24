@@ -39,7 +39,7 @@ public class Data {
         }
     }
 
-    public String getText(Status tweet) {
+    private String getText(Status tweet) {
         String tweetText;
 
         if(tweet.isRetweet()){
@@ -51,7 +51,7 @@ public class Data {
         return tweetText;
     }
 
-    public List<String> cleanTweet(String[] splitTweetText) {
+    private List<String> cleanTweet(String[] splitTweetText) {
         List<String> cleanedTokens = new ArrayList<>();
 
         for(String word : splitTweetText) {
@@ -67,7 +67,7 @@ public class Data {
         return cleanedTokens;
     }
 
-    public String[] tokenizeTweet(String tweetText) {
+    private String[] tokenizeTweet(String tweetText) {
         return tweetText.split("\\s+");
     }
 }
