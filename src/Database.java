@@ -19,7 +19,6 @@ import java.util.List;
 public class Database {
     MongoClient mongoClient;
     MongoDatabase database;
-    MongoCollection collection;
 
     public Database(String name) {
         MongoClient mongoClient = MongoClients.create();
