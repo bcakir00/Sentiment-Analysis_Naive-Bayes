@@ -1,3 +1,4 @@
+import org.bson.Document;
 import twitter4j.Status;
 
 import java.util.ArrayList;
@@ -6,29 +7,50 @@ import java.util.Scanner;
 import java.util.regex.Pattern;
 
 public class Data {
-    public void setupTrainingData(List<Status> tweets) {
-        Scanner scanner = new Scanner(System.in);
+    public List<List<Status>> splitTrainingData(List<Status> tweets) {
+        List<List<Status>> set = new ArrayList<>();
+        List<Status> trainingSet = new ArrayList<>();
+        List<Status> testingSet = new ArrayList<>();
+        int tweetSize = tweets.size();
         int tweetCounter = 0;
 
-        System.out.println("\n Please classify the following tweets as 1:positive, 2:neutral, 3:negative, blank to " +
-                "discard tweet, \"test\" to test, or \"exit\" to stop en delete training set.");
+        for(Status tweet : tweets) {
+            if(tweetCounter < tweetSize * 0.8) {
+                trainingSet.add(tweet);
+            } else {
+                testingSet.add(tweet);
+            }
 
-        for(Status tweet: tweets) {
+            tweetCounter++;
+        }
+
+        set.add(trainingSet);
+        set.add(testingSet);
+
+        return set;
+    }
+
+    public void setupTrainingData(String collectionName, List<List<Status>> set) {
+        Database database =  new Database("IPASS");
+        Scanner scanner = new Scanner(System.in);
+        int tweetCounter = 1;
+        List<Status> trainingSet = set.get(0);
+
+        for(Status tweet: trainingSet) {
             String tweetText = getText(tweet);
-            System.out.println(tweetCounter+1 + "/" + tweets.size() + " - " + tweetText);
+            String[] tokenizedTweet = tokenizeTweet(tweetText);
+            List<String> cleanTokenizedTweet = cleanTweet(tokenizedTweet);
 
-            //tweetText = cleanTweet(tweetText);
-            //List<String> tokenizedTweetText = tokenizeTweet(tweetText);
-
-            String input = scanner.nextLine();
-            switch(input) {
+            System.out.println(tweetCounter + "/" + trainingSet.size() + " - " + tweetText);
+            switch(scanner.nextLine()) {
                 case "1":
+                    database.insertTokens(collectionName, "positive", cleanTokenizedTweet);
                     break;
                 case "2":
+                    database.insertTokens(collectionName, "neutral", cleanTokenizedTweet);
                     break;
                 case "3":
-                    break;
-                case "test":
+                    database.insertTokens(collectionName, "negative", cleanTokenizedTweet);
                     break;
                 default:
                     break;
@@ -36,7 +58,12 @@ public class Data {
 
             //increment total in mongo with one.
             tweetCounter++;
+            if(tweetCounter+1 % 500 == 0) {
+                //print current accuracy of model
+            }
         }
+
+        database.closeConnection();
     }
 
     private String getText(Status tweet) {
