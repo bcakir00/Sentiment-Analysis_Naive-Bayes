@@ -68,6 +68,20 @@ public class Database {
         }
     }
 
+    private void incrementClassCounter(String collectionName, String classifier) {
+        MongoCollection<Document> collection_total = database.getCollection(collectionName + "_totals");
+
+        if(collection_total.find().first() == null) {
+            Document doc = new Document("_id", "total")
+                    .append("positive" , 0)
+                    .append("neutral" , 0)
+                    .append("negative" , 0);
+            collection_total.insertOne(doc);
+        }
+
+        collection_total.updateOne(eq("_id", "total"), inc(classifier, 1));
+    }
+
     public void closeConnection() {
         mongoClient.close();
     }
