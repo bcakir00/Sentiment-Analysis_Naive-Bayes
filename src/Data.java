@@ -12,13 +12,13 @@ public class Data {
         List<Status> trainingSet = new ArrayList<>();
         List<Status> testingSet = new ArrayList<>();
         int tweetSize = tweets.size();
-        int tweetCounter = 0;
+        int tweetCounter = 1;
 
         for(Status tweet : tweets) {
-            if(tweetCounter < tweetSize * 0.8) {
-                trainingSet.add(tweet);
-            } else {
+            if(tweetCounter % 5 == 0) {
                 testingSet.add(tweet);
+            } else {
+                trainingSet.add(tweet);
             }
 
             tweetCounter++;
