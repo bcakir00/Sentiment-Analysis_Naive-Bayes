@@ -35,15 +35,15 @@ public class Database {
                 switch(classifier) {
                     case "positive":
                         doc = new Document("_id", token).append("positive" , 1);
-                        incrementClassCounter(collectionName, "positive");
+                        incrementWordClassCounter(collectionName, "positive");
                         break;
                     case "neutral":
                         doc = new Document("_id", token).append("neutral" , 1);
-                        incrementClassCounter(collectionName, "neutral");
+                        incrementWordClassCounter(collectionName, "neutral");
                         break;
                     case "negative":
                         doc = new Document("_id", token).append("negative" , 1);
-                        incrementClassCounter(collectionName, "negative");
+                        incrementWordClassCounter(collectionName, "negative");
                         break;
                 }
 
@@ -52,33 +52,33 @@ public class Database {
                 switch(classifier) {
                     case "positive":
                         collection.updateOne(eq("_id", token), inc("positive", 1));
-                        incrementClassCounter(collectionName, "positive");
+                        incrementWordClassCounter(collectionName, "positive");
                         break;
                     case "neutral":
                         collection.updateOne(eq("_id", token), inc("neutral", 1));
-                        incrementClassCounter(collectionName, "neutral");
+                        incrementWordClassCounter(collectionName, "neutral");
                         break;
                     case "negative":
                         collection.updateOne(eq("_id", token), inc("negative", 1));
-                        incrementClassCounter(collectionName, "negative");
+                        incrementWordClassCounter(collectionName, "negative");
                         break;
                 }
             }
         }
     }
 
-    private void incrementClassCounter(String collectionName, String classifier) {
+    private void incrementWordClassCounter(String collectionName, String classifier) {
         MongoCollection<Document> collection_total = database.getCollection(collectionName + "_totals");
 
-        if(collection_total.find().first() == null) {
-            Document doc = new Document("_id", "total")
+        if(collection_total.find(eq("_id", "wordTotal")).first() == null) {
+            Document doc = new Document("_id", "wordTotal")
                     .append("positive" , 0)
                     .append("neutral" , 0)
                     .append("negative" , 0);
             collection_total.insertOne(doc);
         }
 
-        collection_total.updateOne(eq("_id", "total"), inc(classifier, 1));
+        collection_total.updateOne(eq("_id", "wordTotal"), inc(classifier, 1));
     }
 
     public void closeConnection() {
