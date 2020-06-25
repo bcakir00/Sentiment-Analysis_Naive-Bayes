@@ -99,7 +99,7 @@ public class Data {
         String tweetText;
 
         if(tweet.isRetweet()){
-            tweetText = tweet.getRetweetedStatus().getText();
+            tweetText = "RETWEET " + tweet.getRetweetedStatus().getText();
         } else {
             tweetText = tweet.getText();
         }
