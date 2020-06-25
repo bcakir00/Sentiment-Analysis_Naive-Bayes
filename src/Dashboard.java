@@ -8,13 +8,13 @@ public class Dashboard {
     }
 
     public void printSimpleDashboard() {
-        int accuracy = calculateModelAccuracy(tweetsGuessedCorrectly, tweetsChecked);
+        double accuracy = calculateModelAccuracy(tweetsGuessedCorrectly, tweetsChecked);
 
-        System.out.println(accuracy);
+        System.out.println("\nINFO - Accuracy: " + accuracy);
     }
 
-    private int calculateModelAccuracy(int correct, int total) {
-        return correct / total;
+    private double calculateModelAccuracy(int correct, int total) {
+        return (double) correct / (double) total;
     }
 
     public void incrementTweetsChecked() {
