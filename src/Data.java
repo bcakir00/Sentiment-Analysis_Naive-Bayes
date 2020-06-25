@@ -33,37 +33,66 @@ public class Data {
     public void setupTrainingData(String collectionName, List<List<Status>> set) {
         Database database =  new Database("IPASS");
         Scanner scanner = new Scanner(System.in);
-        int tweetCounter = 1;
+        Dashboard dashboard = new Dashboard();
+        NaiveBayes naiveBayes = new NaiveBayes();
         List<Status> trainingSet = set.get(0);
+        List<Status> testingSet = set.get(1);
+        int totalSetSize = set.get(0).size() + set.get(1).size();
+        int tweetCounter = 1;
+        int trainingTweetCounter = 0;
+        int testingTweetCounter = 0;
+        String tweetClassification;
+        String tweetText;
+        String collectionTypeName;
 
-        for(Status tweet: trainingSet) {
-            String tweetText = getText(tweet);
+        for(int i = 1; i <= totalSetSize; i++) {
+            if(i % 5 == 0) {
+                tweetText = getText(testingSet.get(testingTweetCounter));
+                testingTweetCounter++;
+                collectionTypeName = collectionName + "_testing";
+            } else {
+                tweetText = getText(trainingSet.get(trainingTweetCounter));
+                trainingTweetCounter++;
+                collectionTypeName = collectionName + "_training";
+            }
+
+            System.out.println(tweetCounter + "/" + totalSetSize + " - " + tweetText);
+
             String[] tokenizedTweet = tokenizeTweet(tweetText);
             List<String> cleanTokenizedTweet = cleanTweet(tokenizedTweet);
 
-            System.out.println(tweetCounter + "/" + trainingSet.size() + " - " + tweetText);
-            switch(scanner.nextLine()) {
+            String input = scanner.nextLine();
+            switch(input) {
                 case "1":
-                    database.insertTokens(collectionName, "positive", cleanTokenizedTweet);
+                    database.insertTokens(collectionTypeName, "positive", cleanTokenizedTweet);
+                    database.incrementTweetClassCounter(collectionTypeName, "positive");
                     break;
                 case "2":
-                    database.insertTokens(collectionName, "neutral", cleanTokenizedTweet);
+                    database.insertTokens(collectionTypeName, "neutral", cleanTokenizedTweet);
+                    database.incrementTweetClassCounter(collectionTypeName, "neutral");
                     break;
                 case "3":
-                    database.insertTokens(collectionName, "negative", cleanTokenizedTweet);
+                    database.insertTokens(collectionTypeName, "negative", cleanTokenizedTweet);
+                    database.incrementTweetClassCounter(collectionTypeName, "negative");
                     break;
                 default:
                     break;
             }
 
-            //increment total in mongo with one.
-            tweetCounter++;
-            if(tweetCounter+1 % 500 == 0) {
-                //print current accuracy of model
-            }
-        }
+            if(i % 5 == 0) {
+                input = convertInputForHumans(input);
+                tweetClassification = naiveBayes.classifyTweet(database, collectionName + "_training", cleanTokenizedTweet);
+                dashboard.incrementTweetsChecked();
 
-        database.closeConnection();
+                if(tweetClassification.equals(input)) {
+                    dashboard.incrementTweetsGuessedCorrectly();
+                }
+
+                dashboard.printSimpleDashboard();
+            }
+
+            tweetCounter++;
+        }
     }
 
     private String getText(Status tweet) {
