@@ -97,4 +97,25 @@ public class Data {
     private String[] tokenizeTweet(String tweetText) {
         return tweetText.split("\\s+");
     }
+
+    private String convertInputForHumans(String input) {
+        String answer;
+
+        switch(input) {
+            case "1":
+                answer = "positive";
+                break;
+            case "2":
+                answer = "neutral";
+                break;
+            case "3":
+                answer = "negative";
+                break;
+            default:
+                answer = null;
+                break;
+        }
+
+        return answer;
+    }
 }
