@@ -109,13 +109,24 @@ public class Data {
 
     private List<String> cleanTweet(String[] splitTweetText) {
         List<String> cleanedTokens = new ArrayList<>();
+        String[] stopSymbols = {"[.]", ",", ":", ";", "#", "@", "!", "\\?", "'", "\""};
+        String[] stopWords = {"van", "de", "het", "tussen", "over", "ook", "is", "of", "met",
+                "doen", "heeft", "onze", "maar", "hun", "onze", "terwijl", "deze", "nou", "mee", "die", "nog", "nóg",
+                "en", "we", "wij", "gewoon", "er", "zich", "wat", "dit", "als", "naar", "te", "met", "voor", "uit",
+                "in", "dat", "es", "ons", "onze", "retweet", "op", "al"};
 
         for(String word : splitTweetText) {
-            word = word.replaceAll("[.]", "");
-            word = word.replaceAll(",", "");
             word = word.toLowerCase();
 
-            if(Pattern.matches("[a-z[A-Z]]*", word)) {
+            for(String symbol : stopSymbols) {
+                word = word.replaceAll(symbol, "");
+            }
+
+            for(String stopword : stopWords) {
+                word = word.replaceAll("\\b" + stopword + "\\b", "");
+            }
+
+            if(Pattern.matches("[a-zA-Z0-9]*", word) && !word.contains("https") &&!word.isEmpty()) {
                 cleanedTokens.add(word);
             }
         }
