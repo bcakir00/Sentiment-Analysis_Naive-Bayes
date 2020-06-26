@@ -1,13 +1,22 @@
 public class Dashboard {
     int tweetsChecked;
     int tweetsGuessedCorrectly;
+    int positiveTweets;
+    int neutralTweets;
+    int negativeTweets;
 
     public Dashboard() {
-        tweetsChecked = 0;
-        tweetsGuessedCorrectly = 0;
+        this.tweetsChecked = 0;
+        this.tweetsGuessedCorrectly = 0;
     }
 
-    public void printSimpleDashboard() {
+    public Dashboard(int positiveTweets, int neutralTweets, int negativeTweets) {
+        this.positiveTweets = positiveTweets;
+        this.neutralTweets = neutralTweets;
+        this.negativeTweets = negativeTweets;
+    }
+
+    public void printAccuracyDashboard() {
         double accuracy = calculateModelAccuracy(tweetsGuessedCorrectly, tweetsChecked);
 
         System.out.println("\nINFO - Accuracy: " + accuracy);
@@ -23,5 +32,17 @@ public class Dashboard {
 
     public void incrementTweetsGuessedCorrectly() {
         this.tweetsGuessedCorrectly++;
+    }
+
+    public void incrementPositiveTweets() {
+        this.positiveTweets++;
+    }
+
+    public void incrementNeutralTweets() {
+        this.neutralTweets++;
+    }
+
+    public void incrementNegativeTweets() {
+        this.negativeTweets++;
     }
 }
