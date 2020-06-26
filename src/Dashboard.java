@@ -60,10 +60,28 @@ public class Dashboard {
     }
 
     /**
+     * Gets amount of tweets checked
+     *
+     * @return amount of tweet checked
+     */
+    public int getTweetsChecked() {
+        return tweetsChecked;
+    }
+
+    /**
      * Increments tweetsGuessedCorrectly by one
      */
     public void incrementTweetsGuessedCorrectly() {
         this.tweetsGuessedCorrectly++;
+    }
+
+    /**
+     * Gets tweets guessed correctly
+     *
+     * @return amount of tweets guessed correctly
+     */
+    public int getTweetsGuessedCorrectly() {
+        return tweetsGuessedCorrectly;
     }
 
     /**
@@ -74,6 +92,15 @@ public class Dashboard {
     }
 
     /**
+     * Gets amount of positive tweets
+     *
+     * @return amount of positive tweets
+     */
+    public int getPositiveTweets() {
+        return positiveTweets;
+    }
+
+    /**
      * Increments neutralTweets by one
      */
     public void incrementNeutralTweets() {
@@ -81,9 +108,27 @@ public class Dashboard {
     }
 
     /**
+     * Gets amount of neutral tweets
+     *
+     * @return amount of neutral tweets
+     */
+    public int getNeutralTweets() {
+        return neutralTweets;
+    }
+
+    /**
      * Increments negativeTweets by one
      */
     public void incrementNegativeTweets() {
         this.negativeTweets++;
+    }
+
+    /**
+     * Gets amount of negative tweets
+     *
+     * @return amount of negative tweets
+     */
+    public int getNegativeTweets() {
+        return negativeTweets;
     }
 }
