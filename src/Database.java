@@ -138,4 +138,15 @@ public class Database {
 
         return total;
     }
+
+    public boolean checkIfCollectionExists(String collectionName) {
+        MongoCollection<Document> collection = database.getCollection(collectionName + "_training_totals");
+
+        try {
+            return !collection.find().first().equals(null);
+        }
+        catch(Exception e) {
+            return false;
+        }
+    }
 }
