@@ -9,6 +9,11 @@ public class TwitterAPI {
     private Twitter twitter;
     private String language;
 
+    /**
+     * Constructor for TwitterAPI class, opens connection to twitter API through API keys en sets tweet mode to
+     * extended to increase tweet character
+     * limit from 140 to 280.
+     */
     public TwitterAPI() {
         ConfigurationBuilder cb = new ConfigurationBuilder();
         cb.setDebugEnabled(false)
@@ -21,6 +26,14 @@ public class TwitterAPI {
         twitter = TwitterFactory.getInstance();
     }
 
+    /**
+     * Gets tweets based on keyword. Note: TwitterAPI has a limit on how much tweets one can retrieve. Current limit
+     * is set to 15.000 tweets per 15 minutes.
+     *
+     * @param keyword keyword one would like to search for
+     * @param limit amount of tweets to be retrieved
+     * @return returns tweetsList
+     */
     public List<Status> getTweets(String keyword, int limit) {
         List<Status> tweetList = new ArrayList<>();
 
@@ -48,6 +61,10 @@ public class TwitterAPI {
         return tweetList;
     }
 
+    /**
+     * @param language set location
+     * @see <a href="https://developer.twitter.com/en/docs/twitter-for-websites/twitter-for-websites-supported-languages/overview">Twitter country codes</a>
+     */
     public void setLanguage(String language) {
         this.language = language;
     }
