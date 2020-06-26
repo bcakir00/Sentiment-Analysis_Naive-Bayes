@@ -1,3 +1,4 @@
+import com.mongodb.client.MongoCollection;
 import org.bson.Document;
 import twitter4j.Status;
 
@@ -88,7 +89,7 @@ public class Data {
                     dashboard.incrementTweetsGuessedCorrectly();
                 }
 
-                dashboard.printSimpleDashboard();
+                dashboard.printAccuracyDashboard();
             }
 
             tweetCounter++;
@@ -157,5 +158,44 @@ public class Data {
         }
 
         return answer;
+    }
+
+    public Dashboard getCurrentSentiment(String collectionName, List<Status> tweets) {
+        Database database =  new Database("IPASS");
+        NaiveBayes naiveBayes = new NaiveBayes();
+        Dashboard dashboard = new Dashboard(0, 0, 0);
+
+        if(!database.checkIfCollectionExists(collectionName)) {
+            collectionName = "economie";
+        }
+
+        for(int i = 0; i < tweets.size(); i++) {
+            String tweetText = getText(tweets.get(i));
+
+            System.out.println("classifying tweet " + (i + 1) + "/" + tweets.size() + " - " + tweetText);
+
+            String[] tokenizedTweet = tokenizeTweet(tweetText);
+            List<String> cleanTokenizedTweet = cleanTweet(tokenizedTweet);
+
+            String tweetClassification = naiveBayes.classifyTweet(database, collectionName + "_training",
+                    cleanTokenizedTweet);
+            dashboard.incrementTweetsChecked();
+
+            switch(tweetClassification) {
+                case "positive":
+                    dashboard.incrementPositiveTweets();
+                    break;
+                case "neutral":
+                    dashboard.incrementNeutralTweets();
+                    break;
+                case "negative":
+                    dashboard.incrementNegativeTweets();
+                    break;
+            }
+
+            System.out.println("Verdict: " + tweetClassification + "\n");
+        }
+
+        return dashboard;
     }
 }
