@@ -5,6 +5,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 
+/**
+ * Twitter API class to retrieve tweets.
+ */
 public class TwitterAPI {
     private Twitter twitter;
     private String language;
