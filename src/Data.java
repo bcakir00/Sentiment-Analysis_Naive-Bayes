@@ -163,7 +163,7 @@ public class Data {
     public Dashboard getCurrentSentiment(String collectionName, List<Status> tweets) {
         Database database =  new Database("IPASS");
         NaiveBayes naiveBayes = new NaiveBayes();
-        Dashboard dashboard = new Dashboard(0, 0, 0);
+        Dashboard dashboard = new Dashboard();
 
         if(!database.checkIfCollectionExists(collectionName)) {
             collectionName = "economie";

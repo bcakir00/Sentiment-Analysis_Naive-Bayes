@@ -8,12 +8,9 @@ public class Dashboard {
     public Dashboard() {
         this.tweetsChecked = 0;
         this.tweetsGuessedCorrectly = 0;
-    }
-
-    public Dashboard(int positiveTweets, int neutralTweets, int negativeTweets) {
-        this.positiveTweets = positiveTweets;
-        this.neutralTweets = neutralTweets;
-        this.negativeTweets = negativeTweets;
+        this.positiveTweets = 0;
+        this.neutralTweets = 0;
+        this.negativeTweets = 0;
     }
 
     public void printAccuracyDashboard() {
