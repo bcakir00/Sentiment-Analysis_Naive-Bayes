@@ -7,7 +7,16 @@ import java.util.List;
 import java.util.Scanner;
 import java.util.regex.Pattern;
 
+/**
+ * Data class that modifies, builds and shows data/model.
+ */
 public class Data {
+    /**
+     * Splits tweets in a training and testing set in a 80% to 20% ratio respectively
+     *
+     * @param tweets list of tweets
+     * @return List containing training set and testing set
+     */
     public List<List<Status>> splitTrainingData(List<Status> tweets) {
         List<List<Status>> set = new ArrayList<>();
         List<Status> trainingSet = new ArrayList<>();
@@ -31,6 +40,15 @@ public class Data {
         return set;
     }
 
+    /**
+     * Let's user train and expand a model.
+     * If keyword is not found in database, defaults to keyword "economie"
+     * Prints accuracy every fifth tweet. Note: every fifth tweet cannot be skipped, as this currently skews the
+     * accuracy rate.
+     *
+     * @param collectionName name of collection
+     * @param set List containing training set and testing set
+     */
     public void setupTrainingData(String collectionName, List<List<Status>> set) {
         Database database =  new Database("IPASS");
         Scanner scanner = new Scanner(System.in);
@@ -96,6 +114,13 @@ public class Data {
         }
     }
 
+    /**
+     * Gets tweet based on if tweet is normal tweet or retweet. Adds marker to retweets to avoid overfitting during
+     * training model
+     *
+     * @param tweet one tweet
+     * @return tweet text
+     */
     private String getText(Status tweet) {
         String tweetText;
 
@@ -108,6 +133,12 @@ public class Data {
         return tweetText;
     }
 
+    /**
+     * Cleans tweets by removing symbols and words that only add noise to model.
+     *
+     * @param splitTweetText Tokenized tweet
+     * @return Cleaned tokenized tweet
+     */
     private List<String> cleanTweet(String[] splitTweetText) {
         List<String> cleanedTokens = new ArrayList<>();
         String[] stopSymbols = {"[.]", ",", ":", ";", "#", "@", "!", "\\?", "'", "\""};
@@ -135,10 +166,22 @@ public class Data {
         return cleanedTokens;
     }
 
+    /**
+     * Tokenizes tweets
+     *
+     * @param tweetText tweet text
+     * @return List of word
+     */
     private String[] tokenizeTweet(String tweetText) {
         return tweetText.split("\\s+");
     }
 
+    /**
+     * Converts simpel input from user to input program can compare to
+     *
+     * @param input numeric input from user
+     * @return Alphabetic "input"
+     */
     private String convertInputForHumans(String input) {
         String answer;
 
@@ -160,6 +203,13 @@ public class Data {
         return answer;
     }
 
+    /**
+     * Classifies recent tweets
+     *
+     * @param collectionName collection name
+     * @param tweets List of tweets
+     * @return Dashboard object
+     */
     public Dashboard getCurrentSentiment(String collectionName, List<Status> tweets) {
         Database database =  new Database("IPASS");
         NaiveBayes naiveBayes = new NaiveBayes();
