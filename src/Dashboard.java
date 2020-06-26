@@ -22,6 +22,16 @@ public class Dashboard {
         System.out.println("\nINFO - Accuracy: " + accuracy);
     }
 
+    public void printDashboard() {
+        double positivePercentage = (double) positiveTweets / (double)tweetsChecked;
+        double neutralPercentage = (double) neutralTweets / (double)tweetsChecked;
+        double negativePercentage = (double) negativeTweets / (double)tweetsChecked;
+
+        System.out.println("Positive Tweets: " + positivePercentage +
+                "\nNeutral Tweets: " + neutralPercentage +
+                "\nNegative Tweets: " + negativePercentage);
+    }
+
     private double calculateModelAccuracy(int correct, int total) {
         return (double) correct / (double) total;
     }
