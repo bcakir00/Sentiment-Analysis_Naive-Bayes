@@ -71,4 +71,13 @@ public class TwitterAPI {
     public void setLanguage(String language) {
         this.language = language;
     }
+
+    /**
+     * Gets to which language twitterAPI is set to
+     *
+     * @return two character language code
+     */
+    public String getLanguage() {
+        return language;
+    }
 }
