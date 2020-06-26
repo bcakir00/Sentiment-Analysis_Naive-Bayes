@@ -81,7 +81,69 @@ public class Database {
         collection_total.updateOne(eq("_id", "wordTotal"), inc(classifier, 1));
     }
 
-    public void closeConnection() {
-        mongoClient.close();
+    public void incrementTweetClassCounter(String collectionName, String classifier) {
+        MongoCollection<Document> collection_total = database.getCollection(collectionName + "_totals");
+
+        if(collection_total.find(eq("_id", "tweetTotal")).first() == null) {
+            Document doc = new Document("_id", "tweetTotal")
+                    .append("positive" , 0)
+                    .append("neutral" , 0)
+                    .append("negative" , 0);
+            collection_total.insertOne(doc);
+        }
+
+        collection_total.updateOne(eq("_id", "tweetTotal"), inc(classifier, 1));
+    }
+
+    public int getClassifierTotal(String collectionName, String classifier) {
+        MongoCollection<Document> collection_total = database.getCollection(collectionName + "_totals");
+
+        try {
+            return (int) collection_total.find(eq("_id", "tweetTotal")).first().get(classifier);
+        } catch(Exception e) {
+            return 0;
+        }
+    }
+
+    public int getTotalSet(String collectionName) {
+        MongoCollection<Document> collection_total = database.getCollection(collectionName + "_totals");
+        String[] classes = {"positive", "neutral", "negative"};
+        int total = 0;
+
+        for(String classifier : classes) {
+            try {
+                total += (int) collection_total.find(eq("_id", "tweetTotal")).first().get(classifier);
+            } catch (Exception e) {
+                total += 0;
+            }
+        }
+
+        return total;
+    }
+
+    public int getClassifierWordTotal(String collectionName, String classifier, String token) {
+        MongoCollection<Document> collection_total = database.getCollection(collectionName);
+
+        try {
+            return (int) collection_total.find(eq("_id", token)).first().get(classifier);
+        } catch(Exception e){
+            return 0;
+        }
+    }
+
+    public int getTotalWordSet(String collectionName) {
+        MongoCollection<Document> collection_total = database.getCollection(collectionName + "_totals");
+        String[] classes = {"positive", "neutral", "negative"};
+        int total = 0;
+
+        for(String classifier : classes) {
+            try {
+                total += (int) collection_total.find(eq("_id", "wordTotal")).first().get(classifier);
+            } catch(Exception e) {
+                total += 0;
+            }
+        }
+
+        return total;
     }
 }
