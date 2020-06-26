@@ -8,15 +8,30 @@ import static com.mongodb.client.model.Updates.*;
 import java.util.List;
 
 
+/**
+ * MongoDB database class.
+ */
 public class Database {
     MongoClient mongoClient;
     MongoDatabase database;
 
+    /**
+     * Constructor.
+     *
+     * @param name name of database
+     */
     public Database(String name) {
         MongoClient mongoClient = MongoClients.create();
         database = mongoClient.getDatabase(name);
     }
 
+    /**
+     * Inserts tokens based on classifier (i.e. positive, neutral, negative)
+     *
+     * @param collectionName name of collection
+     * @param classifier classifier type
+     * @param cleanTokenizedTweet list of clean and tokenized tweet
+     */
     public void insertTokens(String collectionName, String classifier, List<String> cleanTokenizedTweet) {
         MongoCollection<Document> collection = database.getCollection(collectionName);
 
@@ -59,6 +74,12 @@ public class Database {
         }
     }
 
+    /**
+     * Increments word class counter by one
+     *
+     * @param collectionName name of collection
+     * @param classifier type of classifier
+     */
     private void incrementWordClassCounter(String collectionName, String classifier) {
         MongoCollection<Document> collection_total = database.getCollection(collectionName + "_totals");
 
@@ -73,6 +94,12 @@ public class Database {
         collection_total.updateOne(eq("_id", "wordTotal"), inc(classifier, 1));
     }
 
+    /**
+     * Increments tweet class counter by one
+     *
+     * @param collectionName name of collection
+     * @param classifier type of classifier
+     */
     public void incrementTweetClassCounter(String collectionName, String classifier) {
         MongoCollection<Document> collection_total = database.getCollection(collectionName + "_totals");
 
@@ -87,6 +114,13 @@ public class Database {
         collection_total.updateOne(eq("_id", "tweetTotal"), inc(classifier, 1));
     }
 
+    /**
+     * Gets total of specific classifier (e.g. amount of positive tweets)
+     *
+     * @param collectionName name of collection
+     * @param classifier type of classifier
+     * @return amount of specific classified tweets
+     */
     public int getClassifierTotal(String collectionName, String classifier) {
         MongoCollection<Document> collection_total = database.getCollection(collectionName + "_totals");
 
@@ -97,6 +131,12 @@ public class Database {
         }
     }
 
+    /**
+     * Gets total of all classified tweets (e.g. total of positive, neutral and negative tweets)
+     *
+     * @param collectionName name of collection
+     * @return amount of total classified tweets
+     */
     public int getTotalSet(String collectionName) {
         MongoCollection<Document> collection_total = database.getCollection(collectionName + "_totals");
         String[] classes = {"positive", "neutral", "negative"};
@@ -113,6 +153,14 @@ public class Database {
         return total;
     }
 
+    /**
+     * Gets total of words in a specific classifier (e.g. positive, neutral, negative)
+     *
+     * @param collectionName name of collection
+     * @param classifier type of classifier
+     * @param token token/word
+     * @return amount of words in class
+     */
     public int getClassifierWordTotal(String collectionName, String classifier, String token) {
         MongoCollection<Document> collection_total = database.getCollection(collectionName);
 
@@ -123,6 +171,12 @@ public class Database {
         }
     }
 
+    /**
+     * Gets total amount of words from all classifiers
+     *
+     * @param collectionName name of collection
+     * @return Amount of total words
+     */
     public int getTotalWordSet(String collectionName) {
         MongoCollection<Document> collection_total = database.getCollection(collectionName + "_totals");
         String[] classes = {"positive", "neutral", "negative"};
@@ -139,6 +193,12 @@ public class Database {
         return total;
     }
 
+    /**
+     * Checks if collection exists
+     *
+     * @param collectionName name of collection
+     * @return Boolean value if collection exists
+     */
     public boolean checkIfCollectionExists(String collectionName) {
         MongoCollection<Document> collection = database.getCollection(collectionName + "_training_totals");
 
